@@ -1,0 +1,22 @@
+version: "3"
+services:
+  ros-zed:
+    # Ref: https://www.stereolabs.com/docs/docker/using-ros
+    image: j3soon/ros-noetic-zed
+    container_name: ros-noetic-zed
+    privileged: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev
+      - .:/workspace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: sleep infinity
