@@ -11,14 +11,11 @@ FROM nvidia/cudagl:${CUDA_MAJOR}.${CUDA_MINOR}.${CUDA_PATCH}-devel-ubuntu${UBUNT
 # ====================
 # Install ZED SDK
 # ====================
-# We choose ZED SDK 3.8, since 4.0 is still in Early Access at the time of writing.
-# Please note that we encountered non-deterministic bugs in a particular custom docker image using ZED SDK 4.0.
-# For example, we may not be able to open the camera, or the camera may capture zoomed-in images.
-# We did not investigate the root cause of the problem, but we suspect that it may be related to the SDK version.
+# We choose ZED SDK 4.0.
 
-# Run the commands based on `stereolabs/zed:3.8-gl-devel-cuda11.4-ubuntu20.04`
-# Ref: https://hub.docker.com/r/stereolabs/zed/tags?page=1&name=3.8-gl-devel-cuda11.4-ubuntu20.04
-# Ref: https://github.com/stereolabs/zed-docker/blob/fde3fe833859eb78831b0cc4c0a119b745f6ff62/3.X/ubuntu/gl-devel/Dockerfile
+# Run the commands based on `stereolabs/zed:4.0-gl-devel-cuda11.4-ubuntu20.04`
+# Ref: https://hub.docker.com/r/stereolabs/zed/tags?page=1&name=4.0-gl-devel-cuda11.4-ubuntu20.04
+# Ref: https://github.com/stereolabs/zed-docker/blob/fde3fe833859eb78831b0cc4c0a119b745f6ff62/4.X/ubuntu/gl-devel/Dockerfile
 # The commands below are slightly modified to fit our need
 
 # We do not choose to use the docker image provided by `stereolabs/zed`, since we want to use the latest CUDA patch.
@@ -27,8 +24,8 @@ ARG UBUNTU_RELEASE_YEAR
 ARG CUDA_MAJOR
 ARG CUDA_MINOR
 ARG CUDA_PATCH
-ARG ZED_SDK_MAJOR=3
-ARG ZED_SDK_MINOR=8
+ARG ZED_SDK_MAJOR=4
+ARG ZED_SDK_MINOR=0
 
 ENV NVIDIA_DRIVER_CAPABILITIES \
     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}compute,video,utility,graphics
@@ -36,11 +33,11 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 RUN echo "Europe/Paris" > /etc/localtime ; echo "CUDA Version ${CUDA_MAJOR}.${CUDA_MINOR}.${CUDA_PATCH}" > /usr/local/cuda/version.txt
 
 # Setup the ZED SDK
-RUN apt-get update -y || true
-RUN apt-get install --no-install-recommends lsb-release wget less udev sudo build-essential cmake zstd python3 python3-pip libpng-dev libgomp1 -y && \
-    python3 -m pip install --upgrade pip; python3 -m pip install numpy opencv-python && \
+RUN apt-get update -y || true ; apt-get install --no-install-recommends lsb-release wget less udev zstd sudo build-essential cmake python3 python3-pip libpng-dev libgomp1 -y ; \
+    #python3 -m pip install --upgrade pip ; \
+    python3 -m pip install numpy opencv-python pyopengl ; \
     wget -q -O ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run https://download.stereolabs.com/zedsdk/${ZED_SDK_MAJOR}.${ZED_SDK_MINOR}/cu${CUDA_MAJOR}${CUDA_MINOR%.*}/ubuntu${UBUNTU_RELEASE_YEAR} && \
-    chmod +x ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run ; ./ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run -- silent skip_cuda && \
+    chmod +x ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run ; ./ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run silent skip_cuda && \
     ln -sf /lib/x86_64-linux-gnu/libusb-1.0.so.0 /usr/lib/x86_64-linux-gnu/libusb-1.0.so && \
     rm ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run && \
     rm -rf /var/lib/apt/lists/*
