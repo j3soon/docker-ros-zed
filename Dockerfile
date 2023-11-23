@@ -135,20 +135,22 @@ CMD ["bash"]
 # ====================
 # Custom Commands
 # ====================
-# Ref: https://github.com/stereolabs/zed-ros-wrapper#build-the-repository
-# The commands below are slightly modified to fit our need
 
 # Install common tools
 RUN apt-get update && apt-get install -y git vim tmux \
     && rm -rf /var/lib/apt/lists/*
-RUN mkdir -p ~/catkin_ws/src \
-    && cd ~/catkin_ws/src \
-    && git clone https://github.com/stereolabs/zed-ros-wrapper.git \
-    && cd zed-ros-wrapper \
-    && git reset --hard c37f65dfec547d6739d94c6109c3eb3fc7fecbeb # branch v3.8.x \
-    && git pull --recurse-submodules # update recursively all the submodules \
-    && cd ../../ \
-    && . /opt/ros/noetic/setup.sh \
-    && rosdep install --from-paths src --ignore-src -r -y \
-    && catkin_make -DCMAKE_BUILD_TYPE=Release \
-    && . ./devel/setup.sh
+
+# Ref: https://github.com/stereolabs/zed-ros-wrapper#build-the-repository
+# The commands below are slightly modified to fit our need
+
+# RUN mkdir -p ~/catkin_ws/src \
+#     && cd ~/catkin_ws/src \
+#     && git clone https://github.com/stereolabs/zed-ros-wrapper.git \
+#     && cd zed-ros-wrapper \
+#     && git reset --hard 71eb2bb434f059e17191503b707267938f5a1b7f \
+#     && git pull --recurse-submodules \
+#     && cd ../../ \
+#     && . /opt/ros/noetic/setup.sh \
+#     && rosdep install --from-paths src --ignore-src -r -y \
+#     && catkin_make -DCMAKE_BUILD_TYPE=Release \
+#     && . ./devel/setup.sh
