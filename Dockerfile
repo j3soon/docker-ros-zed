@@ -45,6 +45,12 @@ RUN apt-get update -y || true ; apt-get install --no-install-recommends lsb-rele
 # Make some tools happy
 RUN mkdir -p /root/Documents/ZED/
 
+# Install the ZED Python API
+# Ref: https://www.stereolabs.com/docs/app-development/python/install/#running-the-install-script
+RUN cd "/usr/local/zed/" \
+    && pip install requests \
+    && python3 get_python_api.py
+
 WORKDIR /usr/local/zed/
 
 # ====================
