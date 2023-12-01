@@ -9,6 +9,7 @@ on:
       - .github/workflows/build.yaml
       - thirdparty/**
       - Dockerfile
+      - .dockerignore
 
 jobs:
   docker:

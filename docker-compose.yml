@@ -2,7 +2,7 @@ version: "3"
 services:
   ros-zed:
     # Ref: https://www.stereolabs.com/docs/docker/using-ros
-    image: j3soon/ros-noetic-zed:20231123
+    image: j3soon/ros-noetic-zed:20231130
     container_name: ros-noetic-zed
     privileged: true
     environment:
